@@ -1,0 +1,28 @@
+import mongoose from "mongoose";
+import validator from "validator";
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    minlength: 2,
+    maxlength: 30,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    validate: {
+      validator(value) {
+        return validator.isEmail(value);
+      },
+    },
+  },
+});
+
+export const user = mongoose.model("user", userSchema);
