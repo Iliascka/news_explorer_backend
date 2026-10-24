@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 const app = express();
+const { PORT = 3000 } = process.env;
 
 async function connectDB() {
   try {
@@ -14,6 +15,5 @@ async function connectDB() {
     console.error("MongoDB connection failed:", error);
   }
 }
-const { PORT = 3000 } = process.env;
 
 connectDB();

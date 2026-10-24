@@ -10,4 +10,25 @@ const getArticles = async (req, res, next) => {
   }
 };
 
-export { getArticles };
+const createArticle = async (req, res, next) => {
+  try {
+    const { title, keyword, date, text, source, image, link } = req.body;
+    const owner = req.user._id;
+    const article = await ArticleItem.create({
+      title,
+      keyword,
+      date,
+      text,
+      source,
+      image,
+      link,
+      owner,
+    });
+    res.status(201).json(article);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+export { getArticles, createArticle };
