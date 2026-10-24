@@ -3,7 +3,7 @@ import { HTTP_STATUS } from "./constants";
 
 const { CONFLICT } = HTTP_STATUS;
 
-export class CoflictError extends AppError {
+export class ConflictError extends AppError {
   constructor(message) {
     super(message, CONFLICT);
   }
