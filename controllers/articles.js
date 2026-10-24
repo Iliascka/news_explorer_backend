@@ -1,4 +1,5 @@
 import ArticleItem from "../models/article";
+import { ForbidenError, BadRequestError, NotFoundError } from "../errors/index";
 
 const getArticles = async (req, res, next) => {
   try {
@@ -27,8 +28,33 @@ const createArticle = async (req, res, next) => {
     res.status(201).json(article);
   } catch (error) {
     console.error(error);
-    next(error);
+    if (error.name === "ValidationError") {
+      return next(new BadRequestError("Invalid article data"));
+    }
+
+    return next(error);
   }
 };
 
-export { getArticles, createArticle };
+const deleteArticle = async (req, res, next) => {
+  try {
+    const { articleId } = req.params;
+    const article = await ArticleItem.findById(articleId).orFail();
+    if (!article.owner.equals(req.user._id)) {
+      return next(new ForbidenError("Forbidden"));
+    }
+    await article.deleteOne();
+    res.status(200).json({ message: "Article deleted" });
+  } catch (error) {
+    console.error(error);
+    if (error.name === "CastError") {
+      return next(new BadRequestError("Invalid article ID"));
+    }
+    if (error.name === "DocumentNotFoundError") {
+      return next(new NotFoundError("Requested resourse not found"));
+    }
+    return next(error);
+  }
+};
+
+export { getArticles, createArticle, deleteArticle };
