@@ -1,5 +1,5 @@
-import { AppError } from "./AppError";
-import { HTTP_STATUS } from "./constants";
+import { AppError } from "./AppError.js";
+import { HTTP_STATUS } from "./constants.js";
 const { BAD_REQUEST } = HTTP_STATUS;
 
 export class BadRequestError extends AppError {

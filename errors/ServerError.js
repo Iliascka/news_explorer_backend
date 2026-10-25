@@ -1,5 +1,5 @@
-import { AppError } from "./AppError";
-import { HTTP_STATUS } from "./constants";
+import { AppError } from "./AppError.js";
+import { HTTP_STATUS } from "./constants.js";
 
 const { SERVER_ERROR } = HTTP_STATUS;
 

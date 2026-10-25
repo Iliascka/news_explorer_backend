@@ -1,9 +1,9 @@
-import ArticleItem from "../models/article";
-import { ForbidenError, BadRequestError, NotFoundError } from "../errors/index";
+import ArticleItem from "../models/article.js";
+import { ForbidenError, BadRequestError, NotFoundError } from "../errors/index.js";
 
 const getArticles = async (req, res, next) => {
   try {
-    const items = await ArticleItem.find({});
+    const items = await ArticleItem.find({ owner: req.user._id });
     res.status(200).json(items);
   } catch (error) {
     console.error(error);
