@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import { router as mainRouter } from "./routes/index.js";
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -17,3 +18,5 @@ async function connectDB() {
 }
 
 connectDB();
+
+app.use("/", mainRouter);
