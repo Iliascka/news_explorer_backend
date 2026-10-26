@@ -3,7 +3,7 @@ import {
   ForbidenError,
   BadRequestError,
   NotFoundError,
-} from "../errors/index.js";
+} from "../utils/errors/index.js";
 
 const getArticles = async (req, res, next) => {
   try {

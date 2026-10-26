@@ -1,4 +1,7 @@
 import { User } from "../models/user.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { BadRequestError, ConflictError } from "../utils/errors/index.js";
 
 const getCurrentUser = async (req, res, next) => {
   try {
@@ -14,4 +17,27 @@ const getCurrentUser = async (req, res, next) => {
   }
 };
 
-export { getCurrentUser };
+const createUser = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      throw new BadRequestError("All fields are required");
+    }
+    const hash = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email, password: hash });
+    const userObject = user.toObject();
+    delete userObject.password;
+    res.status(201).json(userObject);
+  } catch (error) {
+    console.error(error);
+    if (error.name === "ValidationError") {
+      return next(new BadRequestError("Invalid user data"));
+    }
+    if (error.code === 1100) {
+      return new ConflictError("Conflict Error");
+    }
+    next(error);
+  }
+};
+
+export { getCurrentUser, createUser };
