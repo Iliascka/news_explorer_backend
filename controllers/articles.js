@@ -1,5 +1,9 @@
-import ArticleItem from "../models/article.js";
-import { ForbidenError, BadRequestError, NotFoundError } from "../errors/index.js";
+import { ArticleItem } from "../models/article.js";
+import {
+  ForbidenError,
+  BadRequestError,
+  NotFoundError,
+} from "../errors/index.js";
 
 const getArticles = async (req, res, next) => {
   try {
