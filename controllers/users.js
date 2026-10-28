@@ -2,6 +2,7 @@ import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../utils/config.js";
+
 import {
   BadRequestError,
   ConflictError,
@@ -48,14 +49,21 @@ const createUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    throw next(new BadRequestError("All fields are required"));
+    return next(new BadRequestError("All fields are required"));
   }
   try {
     const user = await User.findUserByCredentials(email, password);
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-      expiresIn: "2d",
+      expiresIn: "7d",
     });
-    res.send({ token });
+    res
+      .cookie("jwt", token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+        sameSite: true,
+        secure: process.env.NODE_ENV === "production",
+      })
+      .end();
   } catch (error) {
     console.error(error);
     if (error.message === "Incorect email or password") {

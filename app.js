@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
 import { router as mainRouter } from "./routes/index.js";
 import "dotenv/config";
@@ -21,4 +22,5 @@ async function connectDB() {
 
 connectDB();
 app.use(express.json());
+app.use(cookieParser());
 app.use("/", mainRouter);
