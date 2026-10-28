@@ -1,9 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import { limiter } from "./middlewares/security.js";
 import "dotenv/config";
 import { router as mainRouter } from "./routes/index.js";
-import "dotenv/config";
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -22,5 +22,6 @@ async function connectDB() {
 
 connectDB();
 app.use(express.json());
+app.use(limiter);
 app.use(cookieParser());
 app.use("/", mainRouter);
