@@ -15,7 +15,6 @@ const getCurrentUser = async (req, res, next) => {
     const user = await User.findById(_id).orFail();
     res.status(200).json({
       user,
-      message: "User has been created",
     });
   } catch (error) {
     console.error(error);
@@ -33,7 +32,9 @@ const createUser = async (req, res, next) => {
     const user = await User.create({ name, email, password: hash });
     const userObject = user.toObject();
     delete userObject.password;
-    res.status(201).json(userObject);
+    res
+      .status(201)
+      .json({ user: userObject, message: "User has been created" });
   } catch (error) {
     console.error(error);
     if (error.name === "ValidationError") {
@@ -56,14 +57,13 @@ const loginUser = async (req, res, next) => {
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
       expiresIn: "7d",
     });
-    res
-      .cookie("jwt", token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: true,
-        secure: process.env.NODE_ENV === "production",
-      })
-      .end();
+    res.cookie("jwt", token, {
+      maxAge: 3600000 * 24 * 7,
+      httpOnly: true,
+      sameSite: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.send("Completed");
   } catch (error) {
     console.error(error);
     if (error.message === "Incorect email or password") {

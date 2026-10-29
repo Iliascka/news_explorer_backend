@@ -1,8 +1,8 @@
 import { JWT_SECRET } from "../utils/config.js";
 import jwt from "jsonwebtoken";
-import { UnauthorizedError } from "../utils/errors";
+import { UnauthorizedError } from "../utils/errors/index.js";
 
-export const authorizeUser = (res, req, error) => {
+export const authorizeUser = (req, res, next) => {
   if (!req.cookies?.jwt) {
     return next(new UnauthorizedError("Authorization Required"));
   }
