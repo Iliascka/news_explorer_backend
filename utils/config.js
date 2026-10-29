@@ -1,4 +1,4 @@
-const { JWT_SECRET = "some-secret-key" } = process.env;
+const { JWT_SECRET } = process.env;
 
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is missing ");
