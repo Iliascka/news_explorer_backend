@@ -7,6 +7,7 @@ import {
   BadRequestError,
   ConflictError,
   UnauthorizedError,
+  NotFoundError,
 } from "../utils/errors/index.js";
 
 const getCurrentUser = async (req, res, next) => {
@@ -18,7 +19,10 @@ const getCurrentUser = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error);
+    if (error.name === "DocumentNotFoundError") {
+      return next(new NotFoundError("Requested resourse not found"));
+    }
+    return next(error);
   }
 };
 
