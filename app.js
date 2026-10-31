@@ -35,11 +35,6 @@ app.use(
 app.use(requestLogger);
 app.use(limiter);
 app.use(cookieParser());
-app.get("/crash-test", (req, res) => {
-  setTimeout(() => {
-    throw new Error("Test uncaught exception");
-  }, 100);
-});
 app.use("/", mainRouter);
 app.use(errorLogger);
 app.use(errors());
