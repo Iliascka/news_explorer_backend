@@ -20,7 +20,14 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
+    "consistent-return": "off",
+    "import/extensions": "off",
+    "import/newline-after-import": "off",
+    "import/no-unresolved": ["error", { ignore: ["^dotenv/config$"] }],
+    "import/order": "off",
+    "import/prefer-default-export": "off",
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
-    "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
+    "no-unused-vars": ["error", { argsIgnorePattern: "^(next|req|res)$" }],
+    "spaced-comment": "off",
   },
 };
