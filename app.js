@@ -4,7 +4,9 @@ import cookieParser from "cookie-parser";
 import { limiter } from "./middlewares/security.js";
 import "dotenv/config";
 import { router as mainRouter } from "./routes/index.js";
+import { errors } from "celebrate";
 import { errorHandler } from "./middlewares/error-handler.js";
+import cors from "cors";
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -23,7 +25,14 @@ async function connectDB() {
 
 connectDB();
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(limiter);
 app.use(cookieParser());
 app.use("/", mainRouter);
+app.use(errors());
 app.use(errorHandler);
