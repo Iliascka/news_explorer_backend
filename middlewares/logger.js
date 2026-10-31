@@ -1,5 +1,6 @@
 import winston from "winston";
 import expressWinston from "express-winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 const messageFormat = winston.format.combine(
   winston.format.timestamp(),
@@ -17,9 +18,17 @@ const requestLogger = expressWinston.logger({
     new winston.transports.Console({
       format: messageFormat,
     }),
-    new winston.transports.File({
-      filename: "request.log",
+    //Rotates log files daily or at 10MB and retains them for 14 days
+    new DailyRotateFile({
+      //Saves logs in the logs/ folder, with a seperate filename for each date.
+      filename: "logs/request-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      maxSize: "10m",
+      maxFiles: "14d",
       format: winston.format.json(),
+    }).on("error", (error) => {
+      //Event Listener: callback displays request file transport errors.
+      console.error("Request log file error", error);
     }),
   ],
 });
@@ -31,11 +40,29 @@ const errorLogger = expressWinston.errorLogger({
       format: messageFormat,
     }),
 
-    new winston.transports.File({
-      filename: "error.log",
+    new DailyRotateFile({
+      filename: "logs/error-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      maxSize: "10m",
+      maxFiles: "14d",
       format: winston.format.json(),
+    }).on("error", (error) => {
+      console.error("Error log file error", error);
     }),
   ],
 });
+
+//Logs uncaught exceptions before the Node.js process exits
+winston.exceptions.handle(
+  new DailyRotateFile({
+    filename: "logs/exceptions-%DATE%.log",
+    datePattern: "YYYY-MM-DD",
+    maxSize: "10m",
+    maxFiles: "14d",
+    format: winston.format.json(),
+  }).on("error", (error) => {
+    console.error("Error log file error", error);
+  }),
+);
 
 export { requestLogger, errorLogger };

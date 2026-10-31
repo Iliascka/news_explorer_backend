@@ -7,6 +7,7 @@ import { router as mainRouter } from "./routes/index.js";
 import { errors } from "celebrate";
 import { errorHandler } from "./middlewares/error-handler.js";
 import cors from "cors";
+import { errorLogger, requestLogger } from "./middlewares/logger.js";
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -31,8 +32,15 @@ app.use(
     credentials: true,
   }),
 );
+app.use(requestLogger);
 app.use(limiter);
 app.use(cookieParser());
+app.get("/crash-test", (req, res) => {
+  setTimeout(() => {
+    throw new Error("Test uncaught exception");
+  }, 100);
+});
 app.use("/", mainRouter);
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
