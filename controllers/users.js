@@ -67,7 +67,13 @@ const loginUser = async (req, res, next) => {
       sameSite: true,
       secure: process.env.NODE_ENV === "production",
     });
-    res.send("Completed");
+    res.json({
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+      message: "Completed",
+    });
   } catch (error) {
     console.error(error);
     if (error.message === "Incorect email or password") {
