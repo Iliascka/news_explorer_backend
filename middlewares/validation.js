@@ -19,14 +19,14 @@ const validateArticle = celebrate({
     }),
     link: Joi.string()
       .required()
-      .uri({ scheme: ["http", "htpps"] })
+      .uri({ scheme: [/^https?/] })
       .messages({
         "string.uri": "Please enter a valid URL",
         "string.empty": "Link is required",
       }),
     image: Joi.string()
       .required()
-      .uri({ scheme: ["http", "https"] })
+      .uri({ scheme: [/^https?/] })
       .messages({
         "string.uri": "Please enter a valid URL",
         "string.empty": "Image is required",
