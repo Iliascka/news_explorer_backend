@@ -44,7 +44,7 @@ const createUser = async (req, res, next) => {
     if (error.name === "ValidationError") {
       return next(new BadRequestError("Invalid user data"));
     }
-    if (error.code === 1100) {
+    if (error.code === 11000) {
       return next(new ConflictError("Conflict Error"));
     }
     next(error);
