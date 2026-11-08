@@ -26,7 +26,6 @@ async function connectDB() {
 
 connectDB();
 app.use(express.json());
-s;
 app.use(
   cors({
     origin: [
