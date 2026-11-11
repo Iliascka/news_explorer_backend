@@ -43,7 +43,10 @@ const createArticle = async (req, res, next) => {
 const deleteArticle = async (req, res, next) => {
   try {
     const { articleId } = req.params;
-    const article = await ArticleItem.findById(articleId).orFail();
+    const article = await ArticleItem.findById(articleId)
+      .select("+owner")
+      .orFail();
+    console.log(article);
     if (!article.owner.equals(req.user._id)) {
       return next(new ForbidenError("Forbidden"));
     }

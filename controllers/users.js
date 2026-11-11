@@ -44,7 +44,7 @@ const createUser = async (req, res, next) => {
     if (error.name === "ValidationError") {
       return next(new BadRequestError("Invalid user data"));
     }
-    if (error.code === 1100) {
+    if (error.code === 11000) {
       return next(new ConflictError("Conflict Error"));
     }
     next(error);
@@ -83,4 +83,13 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-export { getCurrentUser, createUser, loginUser };
+const logoutUser = (req, res, next) => {
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
+export { getCurrentUser, createUser, loginUser, logoutUser };
